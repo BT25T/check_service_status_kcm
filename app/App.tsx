@@ -183,7 +183,9 @@ export default function App() {
                   <Facebook className="w-5 h-5 text-blue-700 mt-0.5" />
                   <div>
                     <p className="text-sm text-slate-500">Facebook</p>
-                    <p className="text-slate-900 font-medium">คิงคอมพ์ ศรีสะเกษ</p>
+                    <a href="https://www.facebook.com/KingcomSSK">
+                      <p className="text-slate-900 font-medium">คิงคอมพ์ ศรีสะเกษ</p>
+                    </a>
                   </div>
                 </div>
               </div>
