@@ -20,7 +20,7 @@ interface StepItem {
   subtitle: string;
 }
 
-const steps: StepItem[] = [
+const allSteps: StepItem[] = [
   {
     code: 'Q',
     title: 'รอคิวงานซ่อม',
@@ -59,6 +59,12 @@ export function StatusTimeline({
   description,
 }: StatusTimelineProps) {
   const currentCode = (statusCode || '').trim().toUpperCase();
+
+  const steps =
+    currentCode == 'C'
+      ? allSteps
+      : allSteps.filter((step) => step.code !== 'C');
+
   const currentIndex = steps.findIndex((s) => s.code === currentCode);
 
   const getStepState = (index: number) => {
@@ -73,7 +79,9 @@ export function StatusTimeline({
       state === 'done'
         ? 'text-white'
         : state === 'current'
-        ? 'text-blue-600'
+        ? code === 'C'
+          ? 'text-orange-600'
+          : 'text-blue-600'
         : 'text-gray-400';
 
     switch (code) {
@@ -94,17 +102,23 @@ export function StatusTimeline({
     }
   };
 
-  const getCircleClass = (state: string) => {
-    switch (state) {
-      case 'done':
-        return 'bg-green-600 border-green-600';
-      case 'current':
-        return 'bg-blue-50 border-blue-600';
-      case 'upcoming':
-        return 'bg-gray-50 border-gray-300';
-      default:
-        return 'bg-yellow-50 border-yellow-400';
+  const getCircleClass = (code: string, state: string) => {
+    if (state === 'done') {
+      return 'bg-green-600 border-green-600';
     }
+
+    if (state === 'current') {
+      if (code === 'C') {
+        return 'bg-orange-50 border-orange-500';
+      }
+      return 'bg-blue-50 border-blue-600';
+    }
+
+    if (state === 'upcoming') {
+      return 'bg-gray-50 border-gray-300';
+    }
+
+    return 'bg-yellow-50 border-yellow-400';
   };
 
   const getLineClass = (index: number) => {
@@ -125,12 +139,15 @@ export function StatusTimeline({
         <div className="relative">
           {steps.map((step, index) => {
             const state = getStepState(index);
+            const isClaimingCurrent =
+              step.code === 'C' && state === 'current';
 
             return (
               <div key={step.code} className="flex gap-4 pb-8 last:pb-0">
                 <div className="relative flex flex-col items-center">
                   <div
                     className={`z-10 flex h-12 w-12 items-center justify-center rounded-full border-2 ${getCircleClass(
+                      step.code,
                       state
                     )}`}
                   >
@@ -155,7 +172,13 @@ export function StatusTimeline({
                     </h4>
 
                     {state === 'current' && (
-                      <span className="rounded-full bg-blue-100 px-2.5 py-1 text-xs text-blue-700">
+                      <span
+                        className={`rounded-full px-2.5 py-1 text-xs ${
+                          isClaimingCurrent
+                            ? 'bg-orange-100 text-orange-700'
+                            : 'bg-blue-100 text-blue-700'
+                        }`}
+                      >
                         ขั้นตอนปัจจุบัน
                       </span>
                     )}
@@ -176,7 +199,13 @@ export function StatusTimeline({
                   </p>
 
                   {step.code === currentCode && (
-                    <div className="mt-3 rounded-lg border border-blue-100 bg-blue-50 p-3">
+                    <div
+                      className={`mt-3 rounded-lg p-3 ${
+                        step.code === 'C'
+                          ? 'border border-orange-100 bg-orange-50'
+                          : 'border border-blue-100 bg-blue-50'
+                      }`}
+                    >
                       <p className="text-sm text-gray-500">รายละเอียดการซ่อม</p>
                       <p className="mt-1 text-sm text-gray-800">
                         {description?.trim()
