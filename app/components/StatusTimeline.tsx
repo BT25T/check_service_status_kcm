@@ -5,6 +5,7 @@ import {
   CheckCircle2,
   Home,
   AlertCircle,
+  Package2,
 } from 'lucide-react';
 
 interface StatusTimelineProps {
@@ -34,6 +35,11 @@ const steps: StepItem[] = [
     code: 'S',
     title: 'รออะไหล่',
     subtitle: 'กำลังรออะไหล่เพื่อดำเนินการต่อ',
+  },
+  {
+    code: 'C',
+    title: 'ส่งเคลม',
+    subtitle: 'กำลังส่งเคลมสินค้า',
   },
   {
     code: 'T',
@@ -77,6 +83,8 @@ export function StatusTimeline({
         return <Wrench className={`w-5 h-5 ${iconClass}`} />;
       case 'S':
         return <Package className={`w-5 h-5 ${iconClass}`} />;
+      case 'C':
+        return <Package2 className={`w-5 h-5 ${iconClass}`} />;
       case 'T':
         return <CheckCircle2 className={`w-5 h-5 ${iconClass}`} />;
       case 'Z':
